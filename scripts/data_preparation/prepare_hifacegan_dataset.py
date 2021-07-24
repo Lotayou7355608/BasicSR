@@ -1,7 +1,5 @@
 import cv2
-import imgaug.augmenters as ia
 import os
-from imgaug.augmenters.meta import Augmenter  # baseclass
 from tqdm import tqdm
 
 
@@ -28,29 +26,29 @@ class Degradation_Simulator:
     """
     Generating training/testing data pairs on the fly.
     The degradation script is aligned with HiFaceGAN paper settings.
-
     Args:
         opt(str | op): Config for degradation script, with degradation type and parameters
         Custom degradation is possible by passing an inherited class from ia.augmentors
     """
 
     def __init__(self, ):
+        import imgaug.augmenters as ia
         self.DEFAULT_DEG_TEMPLATES = {
             'sr4x':
             ia.Sequential([
                 # It's almost like a 4x bicubic downsampling
                 ia.Resize((0.25000, 0.25001), cv2.INTER_AREA),
                 ia.Resize({
-                    "height": 512,
-                    "width": 512
+                    'height': 512,
+                    'width': 512
                 }, cv2.INTER_CUBIC),
             ]),
             'sr4x8x':
             ia.Sequential([
                 ia.Resize((0.125, 0.25), cv2.INTER_AREA),
                 ia.Resize({
-                    "height": 512,
-                    "width": 512
+                    'height': 512,
+                    'width': 512
                 }, cv2.INTER_CUBIC),
             ]),
             'denoise':
@@ -80,6 +78,7 @@ class Degradation_Simulator:
             ia.Sequential(rand_deg_list, random_order=True)
 
     def create_training_dataset(self, deg, gt_folder, lq_folder=None):
+        from imgaug.augmenters.meta import Augmenter  # baseclass
         """
         Create a degradation simulator and apply it to GT images on the fly
         Save the degraded result in the lq_folder (if None, name it as GT_deg)
