@@ -277,6 +277,7 @@ class HiFaceGANModel(SRModel):
                 # The new metric caller automatically returns mean value
                 # FIXME: ERROR: calculate_metric only supports two arguments. Now the codes cannot be successfully run
                 self.metric_results[name] = calculate_metric(dict(sr_pack=sr_pack, gt_pack=gt_pack), opt_)
+            self._log_validation_metric_values(current_iter, dataset_name, tb_logger)
 
     def save(self, epoch, current_iter):
         if hasattr(self, 'net_g_ema'):
