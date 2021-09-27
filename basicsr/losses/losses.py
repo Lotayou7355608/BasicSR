@@ -39,7 +39,7 @@ class L1Loss(nn.Module):
     def __init__(self, loss_weight=1.0, reduction='mean'):
         super(L1Loss, self).__init__()
         if reduction not in ['none', 'mean', 'sum']:
-            raise ValueError(f'Unsupported reduction mode: {reduction}. ' f'Supported ones are: {_reduction_modes}')
+            raise ValueError(f'Unsupported reduction mode: {reduction}. Supported ones are: {_reduction_modes}')
 
         self.loss_weight = loss_weight
         self.reduction = reduction
@@ -68,7 +68,7 @@ class MSELoss(nn.Module):
     def __init__(self, loss_weight=1.0, reduction='mean'):
         super(MSELoss, self).__init__()
         if reduction not in ['none', 'mean', 'sum']:
-            raise ValueError(f'Unsupported reduction mode: {reduction}. ' f'Supported ones are: {_reduction_modes}')
+            raise ValueError(f'Unsupported reduction mode: {reduction}. Supported ones are: {_reduction_modes}')
 
         self.loss_weight = loss_weight
         self.reduction = reduction
@@ -103,7 +103,7 @@ class CharbonnierLoss(nn.Module):
     def __init__(self, loss_weight=1.0, reduction='mean', eps=1e-12):
         super(CharbonnierLoss, self).__init__()
         if reduction not in ['none', 'mean', 'sum']:
-            raise ValueError(f'Unsupported reduction mode: {reduction}. ' f'Supported ones are: {_reduction_modes}')
+            raise ValueError(f'Unsupported reduction mode: {reduction}. Supported ones are: {_reduction_modes}')
 
         self.loss_weight = loss_weight
         self.reduction = reduction
@@ -478,17 +478,17 @@ class GANFeatLoss(nn.Module):
         elif criterion == 'charbonnier':
             self.loss_op = CharbonnierLoss(loss_weight, reduction)
         else:
-            raise ValueError(f'Unsupported loss mode: {criterion}. ' f'Supported ones are: l1|l2|charbonnier')
+            raise ValueError(f'Unsupported loss mode: {criterion}. Supported ones are: l1|l2|charbonnier')
 
         self.loss_weight = loss_weight
 
     def forward(self, pred_fake, pred_real):
-        num_D = len(pred_fake)
+        num_d = len(pred_fake)
         loss = 0
-        for i in range(num_D):  # for each discriminator
+        for i in range(num_d):  # for each discriminator
             # last output is the final prediction, exclude it
             num_intermediate_outputs = len(pred_fake[i]) - 1
             for j in range(num_intermediate_outputs):  # for each layer output
                 unweighted_loss = self.loss_op(pred_fake[i][j], pred_real[i][j].detach())
-                loss += unweighted_loss / num_D
+                loss += unweighted_loss / num_d
         return loss * self.loss_weight
